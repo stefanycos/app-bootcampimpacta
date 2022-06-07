@@ -16,6 +16,7 @@
     <description>Web Application - Management Financial for Kids</description>
     <properties>
         <java.version>11</java.version>
+        <mapstruct.version>1.5.1.Final</mapstruct.version>
     </properties>
 
     <dependencies>
@@ -72,6 +73,12 @@
             <version>5.8.2</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
