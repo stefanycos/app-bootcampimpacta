@@ -2,6 +2,13 @@ server:
   port: 8082
 
 spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://root:root@clusterbootcampimpacta.br0rpld.mongodb.net/?retryWrites=true&w=majority
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      maximum-pool-size: 5
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update

@@ -6,10 +6,13 @@ import br.com.impacta.moedinhas.domain.model.Category;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CategoryAdapter {
 
-    public static CategoryResponse toResponse(Category category) {
+    public static CategoryResponse toResponse(final Category category) {
         return CategoryResponse.builder()
                 .name(category.getName())
                 .id(category.getId())
@@ -17,10 +20,16 @@ public class CategoryAdapter {
                 .build();
     }
 
-    public static Category toCollection(CategoryRequest request) {
+    public static Category toEntity(final CategoryRequest request) {
         Category category = new Category();
         category.setName(request.getName());
 
         return category;
+    }
+
+    public static List<CategoryResponse> toResponseList(final List<Category> categories) {
+        return categories.stream()
+                .map(CategoryAdapter::toResponse)
+                .collect(Collectors.toList());
     }
 }

@@ -1,19 +1,23 @@
 package br.com.impacta.moedinhas.domain.model;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@Document(collection = Category.COLLECTION_NAME)
-public class Category {
-
-    public static final String COLLECTION_NAME = "categories";
+@Entity
+@Table(name = "categories")
+public class Category implements Serializable {
 
     @Id
-    private String id;
+    @GeneratedValue
+    private UUID id;
 
     private String name;
 
