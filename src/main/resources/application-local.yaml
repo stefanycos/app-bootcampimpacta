@@ -9,6 +9,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: root
     password: root
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
