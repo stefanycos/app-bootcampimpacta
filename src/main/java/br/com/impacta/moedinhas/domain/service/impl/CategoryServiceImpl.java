@@ -1,7 +1,7 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
-import br.com.impacta.moedinhas.domain.exception.CategoryConflictException;
-import br.com.impacta.moedinhas.domain.exception.CategoryNotFoundException;
+import br.com.impacta.moedinhas.domain.exception.ConflictException;
+import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.Category;
 import br.com.impacta.moedinhas.domain.service.CategoryService;
 import br.com.impacta.moedinhas.infrastructure.repository.CategoryRepository;
@@ -15,6 +15,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static java.lang.String.format;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -25,7 +27,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findById(UUID id) {
         log.info("Searching category with id {}", id);
-        return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException("Category Not Found"));
+        return categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category Not Found"));
     }
 
     @Override
@@ -33,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Saving category {} in database", category.getName());
 
         if (this.exists(category)) {
-            throw new CategoryConflictException("Category already exists");
+            throw new ConflictException(format("Category named %s already exists", category.getName()));
         }
 
         category.setCreatedAt(LocalDateTime.now());
