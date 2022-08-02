@@ -2,6 +2,7 @@ package br.com.impacta.moedinhas.domain.service.impl;
 
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.User;
+import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import br.com.impacta.moedinhas.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,10 @@ import static java.lang.String.format;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AuthenticationServiceImpl implements UserDetailsService {
+public class AuthenticationServiceImpl implements UserDetailsService, AuthenticationService {
 
     private final UserRepository userRepository;
+
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -29,11 +31,13 @@ public class AuthenticationServiceImpl implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(format("User with email %s, not found", email)));
     }
 
+    @Override
     public User findById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
     }
 
+    @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

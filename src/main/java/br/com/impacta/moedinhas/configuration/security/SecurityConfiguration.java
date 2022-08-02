@@ -1,8 +1,9 @@
 package br.com.impacta.moedinhas.configuration.security;
 
+import br.com.impacta.moedinhas.api.handler.CustomAccessDeniedExceptionHandler;
+import br.com.impacta.moedinhas.api.handler.CustomAuthenticationExceptionHandler;
 import br.com.impacta.moedinhas.configuration.security.impl.JwtTokenFilter;
-import br.com.impacta.moedinhas.domain.service.UserService;
-import br.com.impacta.moedinhas.domain.service.impl.AuthenticationServiceImpl;
+import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import static java.lang.String.format;
@@ -24,7 +27,7 @@ import static java.lang.String.format;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSONAR
 
-    private final AuthenticationServiceImpl authenticationService;
+    private final AuthenticationService authenticationService;
 
     private final TokenService tokenService;
 
@@ -37,6 +40,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new CustomAccessDeniedExceptionHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new CustomAuthenticationExceptionHandler();
     }
 
     @Override
@@ -62,6 +75,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
                 .antMatchers("/api/v1/users/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
                 .anyRequest().authenticated()
+                .and().exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler())
+                .authenticationEntryPoint(authenticationEntryPoint())
                 .and().addFilterBefore(new JwtTokenFilter(tokenService, authenticationService), UsernamePasswordAuthenticationFilter.class);
     }
 

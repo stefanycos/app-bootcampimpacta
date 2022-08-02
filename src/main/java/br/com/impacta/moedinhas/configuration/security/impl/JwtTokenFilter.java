@@ -2,8 +2,7 @@ package br.com.impacta.moedinhas.configuration.security.impl;
 
 import br.com.impacta.moedinhas.configuration.security.TokenService;
 import br.com.impacta.moedinhas.domain.model.User;
-import br.com.impacta.moedinhas.domain.service.UserService;
-import br.com.impacta.moedinhas.domain.service.impl.AuthenticationServiceImpl;
+import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,7 +21,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private TokenService tokenService;
 
-    private AuthenticationServiceImpl authenticationService;
+    private AuthenticationService authenticationService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
