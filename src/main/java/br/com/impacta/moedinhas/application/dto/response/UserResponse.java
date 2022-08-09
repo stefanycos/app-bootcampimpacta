@@ -22,4 +22,6 @@ public class UserResponse {
     @JsonProperty("user_type")
     private Role role;
 
+    private String birthday;
+
 }

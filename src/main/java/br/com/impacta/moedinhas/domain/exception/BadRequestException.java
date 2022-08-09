@@ -2,11 +2,11 @@ package br.com.impacta.moedinhas.domain.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class NotFoundException extends RuntimeException {
+public class BadRequestException extends RuntimeException {
 
-    private static final HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+    private static final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
 
-    public NotFoundException(String message) {
+    public BadRequestException(String message) {
         super(message);
     }
 

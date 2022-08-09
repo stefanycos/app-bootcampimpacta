@@ -2,7 +2,7 @@ package br.com.impacta.moedinhas.domain.service;
 
 import br.com.impacta.moedinhas.domain.model.User;
 
-import java.util.Optional;
+import java.util.UUID;
 
 public interface UserService {
 
@@ -10,6 +10,10 @@ public interface UserService {
 
     boolean exists(User user);
 
-    Optional<User> findByEmail(String email);
+    void delete(UUID id);
+
+    User update(UUID id, User user);
+
+    User findById(UUID id);
 
 }

@@ -72,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/v1/users").permitAll()
-                .antMatchers("/api/v1/users/*").permitAll()
+                .antMatchers("/api/v1/users/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
