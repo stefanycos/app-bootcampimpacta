@@ -3,6 +3,7 @@ package br.com.impacta.moedinhas.api.handler;
 import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -28,6 +30,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessageResponse> generalError(RuntimeException exception) {
+        log.error("An unexpected internal error occurred: {}", exception.getMessage());
         return this.getErrorResponse(MESSAGE_ERROR_INTERNAL, DESCRIPTION_ERROR_INTERNAL, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

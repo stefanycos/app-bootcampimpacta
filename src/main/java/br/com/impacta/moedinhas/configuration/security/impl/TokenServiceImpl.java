@@ -46,7 +46,7 @@ public class TokenServiceImpl implements TokenService {
             Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
             return true;
         } catch (final Exception e) {
-            log.error("Token is not valid. Details: {}", e.getMessage());
+            log.warn("Token is not valid. Details: {}", e.getMessage());
             return false;
         }
     }

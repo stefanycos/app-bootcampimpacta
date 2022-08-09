@@ -17,6 +17,8 @@ public interface CategoryService {
 
     List<Category> findAll();
 
+    List<Category> findAllActive();
+
     Category update(UUID id, Category category);
 
 }

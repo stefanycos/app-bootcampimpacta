@@ -47,7 +47,8 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Setting category status as inactive");
         Category category = this.findById(id);
         category.setStatus(false);
-        this.save(category);
+        category.setUpdatedAt(LocalDateTime.now());
+        categoryRepository.save(category);
     }
 
     @Override
@@ -63,11 +64,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public List<Category> findAllActive() {
+        return categoryRepository.findByStatusTrue();
+    }
+
+    @Override
     public Category update(UUID id, Category source) {
         Category target = this.findById(id);
         target.setUpdatedAt(LocalDateTime.now());
         target.setName(source.getName());
         categoryRepository.save(target);
+        target.setId(id);
         return target;
     }
 }

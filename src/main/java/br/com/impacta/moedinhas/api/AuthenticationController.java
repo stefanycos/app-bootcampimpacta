@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -30,7 +31,7 @@ public class AuthenticationController {
     private final TokenService tokenService;
 
     @PostMapping
-    public ResponseEntity<Object> authenticate(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken auth = authenticationRequest.converter();
         try {
             Authentication authentication = authManager.authenticate(auth);

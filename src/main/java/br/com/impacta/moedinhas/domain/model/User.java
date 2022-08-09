@@ -36,16 +36,16 @@ public class User implements Serializable, UserDetails {
 
     private LocalDateTime birthday;
 
-    @ManyToOne
+    private Role role;
+
+    @OneToOne
     private User parent;
 
-    @OneToMany(mappedBy = "parent")
-    private Collection<User> children;
-
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, Role role) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public String getName() {

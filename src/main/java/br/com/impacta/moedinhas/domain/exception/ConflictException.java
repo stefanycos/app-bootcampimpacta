@@ -15,7 +15,7 @@ public class ConflictException extends RuntimeException {
     }
 
     public HttpStatus getHttpStatus() {
-        return this.getHttpStatus();
+        return this.httpStatus;
     }
 
 
