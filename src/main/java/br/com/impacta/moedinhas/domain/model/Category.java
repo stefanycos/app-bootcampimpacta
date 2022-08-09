@@ -21,7 +21,7 @@ public class Category implements Serializable {
 
     private String name;
 
-    private Boolean status;
+    private Boolean status = true;
 
     private LocalDateTime createdAt;
 

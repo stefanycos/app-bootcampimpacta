@@ -15,6 +15,8 @@ public interface CategoryApplication {
 
     List<CategoryResponse> list();
 
+    List<CategoryResponse> listActive();
+
     CategoryResponse update(UUID id, CategoryRequest request);
 
     void delete(UUID id);

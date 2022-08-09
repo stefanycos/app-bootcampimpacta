@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,13 +20,13 @@ public class CategoryController {
     private final CategoryApplication categoryApplication;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> save(@RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> save(@Valid @RequestBody CategoryRequest request) {
         CategoryResponse response = categoryApplication.save(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PatchMapping("/{categoryId}")
-    public ResponseEntity<CategoryResponse> update(@PathVariable UUID categoryId, @RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponse> update(@PathVariable UUID categoryId, @Valid @RequestBody CategoryRequest request) {
         CategoryResponse response = categoryApplication.update(categoryId, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
@@ -39,6 +40,12 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> list() {
         List<CategoryResponse> categoryResponses = categoryApplication.list();
+        return ResponseEntity.status(HttpStatus.OK).body(categoryResponses);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<CategoryResponse>> listActive() {
+        List<CategoryResponse> categoryResponses = categoryApplication.listActive();
         return ResponseEntity.status(HttpStatus.OK).body(categoryResponses);
     }
 

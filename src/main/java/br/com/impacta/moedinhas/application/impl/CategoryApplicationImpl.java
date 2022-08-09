@@ -37,6 +37,11 @@ public class CategoryApplicationImpl implements CategoryApplication {
     }
 
     @Override
+    public List<CategoryResponse> listActive() {
+        return CategoryAdapter.toResponseList(categoryService.findAllActive());
+    }
+
+    @Override
     public CategoryResponse update(UUID id, CategoryRequest request) {
         Category category = CategoryAdapter.toEntity(request);
         categoryService.update(id, category);
