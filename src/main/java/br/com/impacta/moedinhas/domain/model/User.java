@@ -1,5 +1,7 @@
 package br.com.impacta.moedinhas.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,11 +9,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.UUID;
 
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 @Data
 @Entity
@@ -34,26 +39,22 @@ public class User implements Serializable, UserDetails {
 
     private LocalDateTime updatedAt;
 
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     private Role role;
 
     @OneToOne
     private User parent;
 
-    public User(String name, String email, String password, Role role) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-    }
+    @Transient
+    private String parentEmail;
 
     public String getName() {
         return this.name.trim();
     }
 
     public Boolean getEnabled() {
-        return enabled == null ? true : enabled;
+        return this.enabled == null || this.enabled;
     }
 
     @Override

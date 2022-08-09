@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.api.handler;
 
 import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
+import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,17 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
-    private final String MESSAGE_ERROR_INTERNAL = "Erro interno!";
-    private final String DESCRIPTION_ERROR_INTERNAL = "Ocorreu um erro inesperado entre em contato como Administrador do sistema";
+    private static final String MESSAGE_ERROR_INTERNAL = "Erro interno!";
+    private static final String DESCRIPTION_ERROR_INTERNAL = "Ocorreu um erro inesperado entre em contato como Administrador do sistema";
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageResponse> categoryNotFoundException(NotFoundException exception) {
-        return this.getErrorResponse(exception.getMessage(), HttpStatus.NOT_FOUND.getReasonPhrase(), HttpStatus.NOT_FOUND);
+        return this.getErrorResponse(exception.getMessage(), exception.getReasonPhrase(), exception.getHttpStatus());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorMessageResponse> categoryBadRequestException(BadRequestException exception) {
+        return this.getErrorResponse(exception.getMessage(), exception.getReasonPhrase(), exception.getHttpStatus());
     }
 
     @ExceptionHandler(ConflictException.class)

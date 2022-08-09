@@ -9,6 +9,8 @@ import br.com.impacta.moedinhas.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Component
 public class UserApplicationImpl implements UserApplication {
@@ -19,5 +21,16 @@ public class UserApplicationImpl implements UserApplication {
     public UserResponse create(UserRequest userRequest) {
         User user = userService.create(UserAdapter.toEntity(userRequest));
         return UserAdapter.toResponse(user);
+    }
+
+    @Override
+    public UserResponse update(UUID id, UserRequest userRequest) {
+        User user = userService.update(id, UserAdapter.toEntity(userRequest));
+        return UserAdapter.toResponse(user);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        userService.delete(id);
     }
 }
