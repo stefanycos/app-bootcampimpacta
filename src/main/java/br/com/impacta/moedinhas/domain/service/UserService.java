@@ -16,4 +16,8 @@ public interface UserService {
 
     User findById(UUID id);
 
+    void defineResponsible(UUID idDependent, String responsibleEmail);
+
+    void defineDependent(String dependentEmail, UUID idResponsible);
+
 }

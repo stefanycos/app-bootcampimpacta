@@ -33,4 +33,14 @@ public class UserApplicationImpl implements UserApplication {
     public void delete(UUID id) {
         userService.delete(id);
     }
+
+    @Override
+    public void defineResponsible(UUID idDependent, String responsibleEmail) {
+        userService.defineResponsible(idDependent, responsibleEmail);
+    }
+
+    @Override
+    public void defineDependent(String dependentEmail, UUID idResponsible) {
+        userService.defineDependent(dependentEmail, idResponsible);
+    }
 }
