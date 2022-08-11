@@ -7,4 +7,10 @@ public class Views {
 
     public interface OnUpdate {
     }
+
+    public interface OnUpdateResponsible {
+    }
+
+    public interface OnUpdateDependent {
+    }
 }

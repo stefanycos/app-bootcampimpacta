@@ -1,9 +1,11 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
+import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.Category;
 import br.com.impacta.moedinhas.domain.service.CategoryService;
+import br.com.impacta.moedinhas.domain.service.adapter.ObjectBeanAdapter;
 import br.com.impacta.moedinhas.infrastructure.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,23 +34,34 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) {
-        log.info("Saving category {} in database", category.getName());
+        try {
+            log.info("Saving category {} in database", category.getName());
 
-        if (this.exists(category)) {
-            throw new ConflictException(format("Category named %s already exists", category.getName()));
+            if (this.exists(category)) {
+                throw new ConflictException(format("Category named %s already exists", category.getName()));
+            }
+
+            category.setCreatedAt(LocalDateTime.now());
+            return categoryRepository.save(category);
+
+        } catch (final Exception exception) {
+            log.error("Error on trying to create category. Message: {}", exception.getMessage());
+            throw new InternalErrorException(exception.getMessage());
         }
-
-        category.setCreatedAt(LocalDateTime.now());
-        return categoryRepository.save(category);
     }
 
     @Override
     public void delete(UUID id) {
-        log.info("Setting category status as inactive");
-        Category category = this.findById(id);
-        category.setStatus(false);
-        category.setUpdatedAt(LocalDateTime.now());
-        categoryRepository.save(category);
+        try {
+            log.info("Setting category status as inactive");
+            Category category = this.findById(id);
+            category.setStatus(false);
+            category.setUpdatedAt(LocalDateTime.now());
+            categoryRepository.save(category);
+        } catch (final Exception exception) {
+            log.error("Error on trying to delete category. Message: {}", exception.getMessage());
+            throw new InternalErrorException(exception.getMessage());
+        }
     }
 
     @Override
@@ -70,11 +83,16 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(UUID id, Category source) {
-        Category target = this.findById(id);
-        target.setUpdatedAt(LocalDateTime.now());
-        target.setName(source.getName());
-        categoryRepository.save(target);
-        target.setId(id);
-        return target;
+        try {
+            Category target = this.findById(id);
+            ObjectBeanAdapter.copyNonNullProperties(source, target);
+            target.setUpdatedAt(LocalDateTime.now());
+
+            return target;
+        } catch (final Exception exception) {
+            log.error("Error on trying to update category. Message: {}", exception.getMessage());
+            throw new InternalErrorException(exception.getMessage());
+        }
+
     }
 }

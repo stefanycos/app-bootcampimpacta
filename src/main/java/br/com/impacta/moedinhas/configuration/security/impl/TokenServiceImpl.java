@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.configuration.security.impl;
 
 import br.com.impacta.moedinhas.configuration.security.TokenService;
+import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
 import br.com.impacta.moedinhas.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,19 +25,24 @@ public class TokenServiceImpl implements TokenService {
 
     @Override
     public String createToken(Authentication authentication) {
-        log.info("Generating new token");
-        final User loggedUser = (User) authentication.getPrincipal();
+        try {
+            log.info("Generating new token");
+            final User loggedUser = (User) authentication.getPrincipal();
 
-        Date currentDate = new Date();
-        Date expirationDate = new Date(currentDate.getTime() + Long.parseLong(expiration));
+            Date currentDate = new Date();
+            Date expirationDate = new Date(currentDate.getTime() + Long.parseLong(expiration));
 
-        return Jwts.builder()
-                .setIssuer("Moedinhas App")
-                .setSubject(loggedUser.getId().toString())
-                .setIssuedAt(currentDate)
-                .setExpiration(expirationDate)
-                .signWith(SignatureAlgorithm.HS256, secret)
-                .compact();
+            return Jwts.builder()
+                    .setIssuer("Moedinhas App")
+                    .setSubject(loggedUser.getId().toString())
+                    .setIssuedAt(currentDate)
+                    .setExpiration(expirationDate)
+                    .signWith(SignatureAlgorithm.HS256, secret)
+                    .compact();
+        } catch (final Exception exception) {
+            log.error("Error on trying to create token. Message: {}", exception.getMessage());
+            throw new InternalErrorException(exception.getMessage());
+        }
     }
 
     @Override
@@ -54,6 +60,6 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public String retrieveUserId(String token) {
         Claims claims = Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token).getBody();
-        return claims.getSubject().toString();
+        return claims.getSubject();
     }
 }

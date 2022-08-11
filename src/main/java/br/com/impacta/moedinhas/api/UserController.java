@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.api;
 
 import br.com.impacta.moedinhas.application.UserApplication;
+import br.com.impacta.moedinhas.application.dto.request.DefineParentRequest;
 import br.com.impacta.moedinhas.application.dto.request.UserRequest;
 import br.com.impacta.moedinhas.application.dto.request.Views;
 import br.com.impacta.moedinhas.application.dto.response.UserResponse;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<UserResponse> update(@PathVariable UUID userId, @Validated(Views.OnUpdate.class) @Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<UserResponse> update(@PathVariable UUID userId, @Validated(Views.OnUpdate.class) @Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = userApplication.update(userId, userRequest);
         return ResponseEntity.status(HttpStatus.OK).body(userResponse);
     }
@@ -36,6 +37,18 @@ public class UserController {
     public ResponseEntity<Object> delete(@PathVariable UUID userId) {
         userApplication.delete(userId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/{userId}/responsible")
+    public ResponseEntity<Object> setResponsible(@PathVariable UUID userId, @Validated(Views.OnUpdateDependent.class) @Valid @RequestBody DefineParentRequest request) {
+        userApplication.defineResponsible(userId, request.getResponsibleEmail());
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{userId}/dependent")
+    public ResponseEntity<Object> setDependent(@PathVariable UUID userId, @Validated(Views.OnUpdateResponsible.class) @Valid @RequestBody DefineParentRequest request) {
+        userApplication.defineDependent(request.getDependentEmail(), userId);
+        return ResponseEntity.ok().build();
     }
 
 }

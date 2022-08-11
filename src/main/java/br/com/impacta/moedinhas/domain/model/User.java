@@ -1,9 +1,6 @@
 package br.com.impacta.moedinhas.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,7 +15,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class User implements Serializable, UserDetails {
@@ -44,6 +42,7 @@ public class User implements Serializable, UserDetails {
     private Role role;
 
     @OneToOne
+    @JoinColumn(name = "parent_id", nullable = true)
     private User parent;
 
     @Transient

@@ -12,4 +12,8 @@ public interface UserApplication {
     UserResponse update(UUID id, UserRequest userRequest);
 
     void delete(UUID id);
+
+    void defineResponsible(UUID idDependent, String responsibleEmail);
+
+    void defineDependent(String dependentEmail, UUID idResponsible);
 }
