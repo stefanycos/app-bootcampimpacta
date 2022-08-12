@@ -34,34 +34,23 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category save(Category category) {
-        try {
-            log.info("Saving category {} in database", category.getName());
+        log.info("Saving category {} in database", category.getName());
 
-            if (this.exists(category)) {
-                throw new ConflictException(format("Category named %s already exists", category.getName()));
-            }
-
-            category.setCreatedAt(LocalDateTime.now());
-            return categoryRepository.save(category);
-
-        } catch (final Exception exception) {
-            log.error("Error on trying to create category. Message: {}", exception.getMessage());
-            throw new InternalErrorException(exception.getMessage());
+        if (this.exists(category)) {
+            throw new ConflictException(format("Category named %s already exists", category.getName()));
         }
+
+        category.setCreatedAt(LocalDateTime.now());
+        return categoryRepository.save(category);
     }
 
     @Override
     public void delete(UUID id) {
-        try {
-            log.info("Setting category status as inactive");
-            Category category = this.findById(id);
-            category.setStatus(false);
-            category.setUpdatedAt(LocalDateTime.now());
-            categoryRepository.save(category);
-        } catch (final Exception exception) {
-            log.error("Error on trying to delete category. Message: {}", exception.getMessage());
-            throw new InternalErrorException(exception.getMessage());
-        }
+        log.info("Setting category status as inactive");
+        Category category = this.findById(id);
+        category.setStatus(false);
+        category.setUpdatedAt(LocalDateTime.now());
+        categoryRepository.save(category);
     }
 
     @Override
@@ -83,16 +72,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(UUID id, Category source) {
-        try {
-            Category target = this.findById(id);
-            ObjectBeanAdapter.copyNonNullProperties(source, target);
-            target.setUpdatedAt(LocalDateTime.now());
+        Category target = this.findById(id);
+        ObjectBeanAdapter.copyNonNullProperties(source, target);
+        target.setUpdatedAt(LocalDateTime.now());
 
-            return target;
-        } catch (final Exception exception) {
-            log.error("Error on trying to update category. Message: {}", exception.getMessage());
-            throw new InternalErrorException(exception.getMessage());
-        }
-
+        return target;
     }
 }

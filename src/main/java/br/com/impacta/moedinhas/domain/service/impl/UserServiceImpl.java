@@ -36,21 +36,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(User user) {
-        try {
-            log.info("Saving user {} in database", user.getEmail());
+        log.info("Saving user {} in database", user.getEmail());
 
-            if (this.exists(user)) {
-                throw new ConflictException(format("User with email %s already exists", user.getEmail()));
-            }
-
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setCreatedAt(LocalDateTime.now());
-            return userRepository.save(user);
-
-        } catch (final Exception exception) {
-            log.error("Error on trying to create user. Message: {}", exception.getMessage());
-            throw new InternalErrorException(exception.getMessage());
+        if (this.exists(user)) {
+            throw new ConflictException(format("User with email %s already exists", user.getEmail()));
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setCreatedAt(LocalDateTime.now());
+        return userRepository.save(user);
     }
 
     @Override
