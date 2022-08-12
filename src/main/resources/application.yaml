@@ -1,6 +1,7 @@
 server:
   port: 8082
 
+# Database configuration
 spring:
   datasource:
     hikari:
@@ -12,3 +13,9 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# Application configuration
+app:
+  jwt:
+    expiration: 86400000 # In Milliseconds
+    secret: "01d179b40f130473197341d1cd7e6299"
