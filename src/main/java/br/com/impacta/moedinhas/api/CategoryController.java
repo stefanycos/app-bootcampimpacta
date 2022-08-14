@@ -3,6 +3,9 @@ package br.com.impacta.moedinhas.api;
 import br.com.impacta.moedinhas.application.CategoryApplication;
 import br.com.impacta.moedinhas.application.dto.request.CategoryRequest;
 import br.com.impacta.moedinhas.application.dto.response.CategoryResponse;
+import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +28,13 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Updated", response = CategoryResponse.class),
+        @ApiResponse(code = 400, message = "Bad Request", response = ErrorMessageResponse.class),
+        @ApiResponse(code = 401, message = "Unauthorized", response = ErrorMessageResponse.class),
+        @ApiResponse(code = 403, message = "Forbidden", response = ErrorMessageResponse.class),
+        @ApiResponse(code = 404, message = "Not Found", response = ErrorMessageResponse.class)
+    })
     @PatchMapping("/{categoryId}")
     public ResponseEntity<CategoryResponse> update(@PathVariable UUID categoryId, @Valid @RequestBody CategoryRequest request) {
         CategoryResponse response = categoryApplication.update(categoryId, request);

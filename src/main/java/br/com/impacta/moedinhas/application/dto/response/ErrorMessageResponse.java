@@ -1,14 +1,15 @@
 package br.com.impacta.moedinhas.application.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@ApiModel
 @Builder
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
