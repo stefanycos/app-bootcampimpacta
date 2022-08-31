@@ -1,7 +1,0 @@
-server:
-  port: 8082
-
-spring:
-  data:
-    mongodb:
-      uri: mongodb+srv://root:root@clusterbootcampimpacta.br0rpld.mongodb.net/?retryWrites=true&w=majority

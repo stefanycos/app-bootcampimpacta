@@ -9,6 +9,9 @@ import br.com.impacta.moedinhas.domain.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Component
 public class CategoryApplicationImpl implements CategoryApplication {
@@ -17,14 +20,36 @@ public class CategoryApplicationImpl implements CategoryApplication {
 
     @Override
     public CategoryResponse save(final CategoryRequest request) {
-        Category category = CategoryAdapter.toCollection(request);
+        Category category = CategoryAdapter.toEntity(request);
         categoryService.save(category);
         return CategoryAdapter.toResponse(category);
     }
 
     @Override
-    public CategoryResponse findById(final String id) {
+    public CategoryResponse findById(final UUID id) {
         Category category = categoryService.findById(id);
         return CategoryAdapter.toResponse(category);
+    }
+
+    @Override
+    public List<CategoryResponse> list() {
+        return CategoryAdapter.toResponseList(categoryService.findAll());
+    }
+
+    @Override
+    public List<CategoryResponse> listActive() {
+        return CategoryAdapter.toResponseList(categoryService.findAllActive());
+    }
+
+    @Override
+    public CategoryResponse update(UUID id, CategoryRequest request) {
+        Category category = CategoryAdapter.toEntity(request);
+        categoryService.update(id, category);
+        return CategoryAdapter.toResponse(category);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        categoryService.delete(id);
     }
 }
