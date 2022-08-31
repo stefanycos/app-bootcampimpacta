@@ -1,7 +1,8 @@
-package br.com.impacta.moedinhas.configuration.security.impl;
+package br.com.impacta.moedinhas.domain.service.impl;
 
-import br.com.impacta.moedinhas.configuration.security.TokenService;
+import br.com.impacta.moedinhas.domain.TokenService;
 import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
+import br.com.impacta.moedinhas.domain.model.Token;
 import br.com.impacta.moedinhas.domain.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -24,7 +25,7 @@ public class TokenServiceImpl implements TokenService {
     private String secret;
 
     @Override
-    public String createToken(Authentication authentication) {
+    public Token createToken(Authentication authentication) {
         try {
             log.info("Generating new token");
             final User loggedUser = (User) authentication.getPrincipal();
@@ -32,13 +33,15 @@ public class TokenServiceImpl implements TokenService {
             Date currentDate = new Date();
             Date expirationDate = new Date(currentDate.getTime() + Long.parseLong(expiration));
 
-            return Jwts.builder()
+            final String token = Jwts.builder()
                     .setIssuer("Moedinhas App")
                     .setSubject(loggedUser.getId().toString())
                     .setIssuedAt(currentDate)
                     .setExpiration(expirationDate)
                     .signWith(SignatureAlgorithm.HS256, secret)
                     .compact();
+
+            return Token.builder().token(token).role(loggedUser.getRole()).userId(loggedUser.getId()).build();
         } catch (final Exception exception) {
             log.error("Error on trying to create token. Message: {}", exception.getMessage());
             throw new InternalErrorException(exception.getMessage());

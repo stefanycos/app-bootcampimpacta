@@ -1,11 +1,13 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
+import br.com.impacta.moedinhas.domain.TokenService;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.User;
 import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import br.com.impacta.moedinhas.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,6 +25,7 @@ public class AuthenticationServiceImpl implements UserDetailsService, Authentica
 
     private final UserRepository userRepository;
 
+    private final TokenService tokenService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -40,6 +43,11 @@ public class AuthenticationServiceImpl implements UserDetailsService, Authentica
     @Override
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User createToken(final Authentication authentication) {
+        return null;
     }
 
 }
