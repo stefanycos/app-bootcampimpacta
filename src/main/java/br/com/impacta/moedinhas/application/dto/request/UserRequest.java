@@ -37,6 +37,7 @@ public class UserRequest {
     @JsonProperty("user_type")
     private Role role;
 
+    @ApiModelProperty(notes = "Date format dd/MM/yyyy")
     @NotNull
     @NotEmpty
     private String birthday;

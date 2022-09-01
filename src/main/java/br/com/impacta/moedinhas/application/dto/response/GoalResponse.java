@@ -9,12 +9,16 @@ import java.util.UUID;
 @Builder
 @Setter
 @Getter
-public class CategoryResponse {
+public class GoalResponse {
 
     private UUID id;
 
     private String name;
 
-    private String status;
+    private Boolean reached;
+
+    private String description;
+
+    private Double cost;
 
 }

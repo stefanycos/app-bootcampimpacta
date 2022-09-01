@@ -3,7 +3,6 @@ package br.com.impacta.moedinhas.api;
 import br.com.impacta.moedinhas.application.TokenApplication;
 import br.com.impacta.moedinhas.application.dto.request.AuthenticationRequest;
 import br.com.impacta.moedinhas.application.dto.response.AuthenticationResponse;
-import br.com.impacta.moedinhas.application.dto.response.CategoryResponse;
 import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
