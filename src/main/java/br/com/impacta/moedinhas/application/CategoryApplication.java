@@ -19,5 +19,4 @@ public interface CategoryApplication {
 
     CategoryResponse update(UUID id, CategoryRequest request);
 
-    void delete(UUID id);
 }

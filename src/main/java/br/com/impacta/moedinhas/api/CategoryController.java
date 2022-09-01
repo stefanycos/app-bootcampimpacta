@@ -59,10 +59,4 @@ public class CategoryController {
         return ResponseEntity.status(HttpStatus.OK).body(categoryResponses);
     }
 
-    @DeleteMapping("/{categoryId}")
-    public ResponseEntity<?> remove(@PathVariable UUID categoryId) {
-        categoryApplication.delete(categoryId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
 }

@@ -40,17 +40,9 @@ public class CategoryServiceImpl implements CategoryService {
             throw new ConflictException(format("Category named %s already exists", category.getName()));
         }
 
+        category.setStatus(true);
         category.setCreatedAt(LocalDateTime.now());
         return categoryRepository.save(category);
-    }
-
-    @Override
-    public void delete(UUID id) {
-        log.info("Setting category status as inactive");
-        Category category = this.findById(id);
-        category.setStatus(false);
-        category.setUpdatedAt(LocalDateTime.now());
-        categoryRepository.save(category);
     }
 
     @Override

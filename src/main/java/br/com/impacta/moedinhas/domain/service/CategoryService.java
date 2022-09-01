@@ -11,8 +11,6 @@ public interface CategoryService {
 
     Category save(Category category);
 
-    void delete(UUID id);
-
     boolean exists(Category category);
 
     List<Category> findAll();

@@ -48,8 +48,4 @@ public class CategoryApplicationImpl implements CategoryApplication {
         return CategoryAdapter.toResponse(category);
     }
 
-    @Override
-    public void delete(UUID id) {
-        categoryService.delete(id);
-    }
 }

@@ -31,7 +31,4 @@ public class Category implements Serializable {
         return this.name.trim();
     }
 
-    public Boolean getStatus() {
-        return status == null ? true : status;
-    }
 }
