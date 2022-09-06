@@ -25,6 +25,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static java.lang.String.format;
 
 @RequiredArgsConstructor
@@ -34,6 +37,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     private final AuthenticationService authenticationService;
 
     private final TokenService tokenService;
+
+    private final List<String> allowedOrigins = Arrays.asList("http://localhost:3000/",
+            "https://moedinhas.herokuapp.com/");
+    private final List<String> allowedMethods = Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE");
+    private final List<String> allowedHeaders = Arrays.asList("*");
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -82,7 +90,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .and().csrf().disable()
+                .and().cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
@@ -94,11 +102,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     }
 
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(allowedMethods);
+        configuration.setAllowedHeaders(allowedHeaders);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
 }
