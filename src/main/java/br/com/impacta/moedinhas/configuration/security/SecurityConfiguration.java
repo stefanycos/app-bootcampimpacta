@@ -25,9 +25,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static java.lang.String.format;
 
 @RequiredArgsConstructor
@@ -37,11 +34,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     private final AuthenticationService authenticationService;
 
     private final TokenService tokenService;
-
-    private final List<String> allowedOrigins = Arrays.asList("http://localhost:3000/",
-            "https://moedinhas.herokuapp.com/");
-    private final List<String> allowedMethods = Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE");
-    private final List<String> allowedHeaders = Arrays.asList("*");
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -101,15 +93,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
                 .and().addFilterBefore(new JwtTokenFilter(tokenService, authenticationService), UsernamePasswordAuthenticationFilter.class);
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(allowedOrigins);
-        configuration.setAllowedMethods(allowedMethods);
-        configuration.setAllowedHeaders(allowedHeaders);
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
+
 }
