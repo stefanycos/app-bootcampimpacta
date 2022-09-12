@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     private final TokenService tokenService;
 
     private final List<String> allowedOrigins = Arrays.asList("http://localhost:3000/",
-            "https://moedinhas.herokuapp.com/", "/**", "*");
+            "https://moedinhas.herokuapp.com/");
     private final List<String> allowedMethods = Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE");
     private final List<String> allowedHeaders = Arrays.asList("*");
 
