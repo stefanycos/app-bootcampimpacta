@@ -1,9 +1,11 @@
 package br.com.impacta.moedinhas.api;
 
+import br.com.impacta.moedinhas.application.TokenApplication;
 import br.com.impacta.moedinhas.application.dto.request.AuthenticationRequest;
 import br.com.impacta.moedinhas.application.dto.response.AuthenticationResponse;
 import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
-import br.com.impacta.moedinhas.configuration.security.TokenService;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,18 +30,23 @@ public class AuthenticationController {
 
     private final AuthenticationManager authManager;
 
-    private final TokenService tokenService;
+    private final TokenApplication tokenApplication;
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Authenticated", response = AuthenticationResponse.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = ErrorMessageResponse.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = ErrorMessageResponse.class)
+    })
     @PostMapping
     public ResponseEntity<Object> authenticate(@Valid @RequestBody AuthenticationRequest authenticationRequest) {
         UsernamePasswordAuthenticationToken auth = authenticationRequest.converter();
         try {
             Authentication authentication = authManager.authenticate(auth);
 
-            String token = tokenService.createToken(authentication);
-            return ResponseEntity.status(HttpStatus.CREATED).body(new AuthenticationResponse(token));
+            AuthenticationResponse authenticationResponse = tokenApplication.createToken(authentication);
+            return ResponseEntity.status(HttpStatus.CREATED).body(authenticationResponse);
 
-        } catch (AuthenticationException e) {
+        } catch (final AuthenticationException e) {
             log.error("Error on trying to authenticate user. Error {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ErrorMessageResponse.builder()
                     .timestamp(LocalDateTime.now())

@@ -1,6 +1,6 @@
 package br.com.impacta.moedinhas.infrastructure.repository;
 
-import br.com.impacta.moedinhas.domain.model.Category;
+import br.com.impacta.moedinhas.domain.model.Goal;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +9,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CategoryRepository extends CrudRepository<Category, UUID> {
+public interface GoalRepository extends CrudRepository<Goal, UUID> {
 
-    Optional<Category> findByNameIgnoreCase(String name);
+    Optional<Goal> findByNameIgnoreCase(String name);
 
-    List<Category> findByStatusTrue();
+    List<Goal> findByReachedFalse();
 }

@@ -10,4 +10,5 @@ public interface AuthenticationService {
     User findById(UUID id);
 
     Optional<User> findByEmail(String email);
+
 }

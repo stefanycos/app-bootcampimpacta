@@ -1,6 +1,6 @@
 package br.com.impacta.moedinhas.configuration.security.impl;
 
-import br.com.impacta.moedinhas.configuration.security.TokenService;
+import br.com.impacta.moedinhas.domain.TokenService;
 import br.com.impacta.moedinhas.domain.model.User;
 import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import lombok.AllArgsConstructor;

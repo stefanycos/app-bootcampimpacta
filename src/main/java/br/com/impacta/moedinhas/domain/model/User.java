@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -41,9 +42,12 @@ public class User implements Serializable, UserDetails {
 
     private Role role;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", nullable = true)
     private User parent;
+
+    @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    private List<Goal> goals;
 
     @Transient
     private String parentEmail;

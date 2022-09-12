@@ -1,19 +1,17 @@
 package br.com.impacta.moedinhas.domain.model;
 
 import lombok.Data;
+import org.eclipse.jetty.websocket.jsr356.encoders.BooleanEncoder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "categories")
-public class Category implements Serializable {
+@Table(name = "goals")
+public class Goal implements Serializable {
 
     @Id
     @GeneratedValue
@@ -21,17 +19,22 @@ public class Category implements Serializable {
 
     private String name;
 
-    private Boolean status = true;
+    private Boolean reached;
+
+    private String description;
+
+    private Double cost;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public String getName() {
         return this.name.trim();
     }
 
-    public Boolean getStatus() {
-        return status == null ? true : status;
-    }
 }
