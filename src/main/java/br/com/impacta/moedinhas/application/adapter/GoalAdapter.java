@@ -26,7 +26,7 @@ public class GoalAdapter {
 
     public static Goal toEntity(final GoalRequest request) {
         Goal goal = new Goal();
-        goal.setName(request.getName());
+        goal.setName(request.getName().trim());
         goal.setCost(request.getCost());
         goal.setDescription(request.getDescription());
         goal.setUser(User.builder().id(UUID.fromString(request.getUserId())).build());
@@ -34,8 +34,20 @@ public class GoalAdapter {
         return goal;
     }
 
-    public static List<GoalResponse> toResponseList(final List<Goal> categories) {
-        return categories.stream()
+    public static Goal toEntity(UUID id, final GoalRequest request) {
+        Goal goal = new Goal();
+        goal.setId(id);
+        goal.setName(request.getName() != null ? request.getName().trim() : null);
+        goal.setCost(request.getCost());
+        goal.setDescription(request.getDescription());
+        goal.setReached(request.getReached());
+        goal.setUser(User.builder().id(UUID.fromString(request.getUserId())).build());
+
+        return goal;
+    }
+
+    public static List<GoalResponse> toResponseList(final List<Goal> goals) {
+        return goals.stream()
                 .map(GoalAdapter::toResponse)
                 .collect(Collectors.toList());
     }

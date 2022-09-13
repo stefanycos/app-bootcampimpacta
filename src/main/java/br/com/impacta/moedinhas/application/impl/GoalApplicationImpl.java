@@ -2,11 +2,16 @@ package br.com.impacta.moedinhas.application.impl;
 
 import br.com.impacta.moedinhas.application.GoalApplication;
 import br.com.impacta.moedinhas.application.adapter.GoalAdapter;
+import br.com.impacta.moedinhas.application.adapter.PageableAdapter;
 import br.com.impacta.moedinhas.application.dto.request.GoalRequest;
 import br.com.impacta.moedinhas.application.dto.response.GoalResponse;
+import br.com.impacta.moedinhas.application.dto.response.PageableResponse;
 import br.com.impacta.moedinhas.domain.model.Goal;
 import br.com.impacta.moedinhas.domain.service.GoalService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -32,20 +37,28 @@ public class GoalApplicationImpl implements GoalApplication {
     }
 
     @Override
-    public List<GoalResponse> list() {
-        return GoalAdapter.toResponseList(goalService.findAll());
+    public PageableResponse list(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Goal> pageableGoals = goalService.findAll(pageable);
+
+        List<GoalResponse> goalResponse = GoalAdapter.toResponseList(pageableGoals.getContent());
+        return PageableAdapter.toPageable(goalResponse, pageableGoals);
     }
 
     @Override
-    public List<GoalResponse> listNotReached() {
-        return GoalAdapter.toResponseList(goalService.findAllNotReached());
+    public PageableResponse<PageableResponse> listNotReached(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Goal> pageableGoals = goalService.findAllNotReached(pageable);
+
+        List<GoalResponse> goalResponse = GoalAdapter.toResponseList(pageableGoals.getContent());
+        return PageableAdapter.toPageable(goalResponse, pageableGoals);
     }
 
     @Override
     public GoalResponse update(UUID id, GoalRequest request) {
-        Goal goal = GoalAdapter.toEntity(request);
-        goalService.update(id, goal);
-        return GoalAdapter.toResponse(goal);
+        Goal goal = GoalAdapter.toEntity(id, request);
+        Goal updatedGoal = goalService.update(id, goal);
+        return GoalAdapter.toResponse(updatedGoal);
     }
 
 }

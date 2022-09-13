@@ -1,8 +1,9 @@
 package br.com.impacta.moedinhas.domain.service;
 
 import br.com.impacta.moedinhas.domain.model.Goal;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface GoalService {
@@ -13,9 +14,9 @@ public interface GoalService {
 
     boolean exists(Goal goal);
 
-    List<Goal> findAll();
+    Page<Goal> findAll(Pageable pageable);
 
-    List<Goal> findAllNotReached();
+    Page<Goal> findAllNotReached(Pageable pageable);
 
     Goal update(UUID id, Goal goal);
 

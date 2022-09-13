@@ -1,7 +1,6 @@
 package br.com.impacta.moedinhas.domain.model;
 
 import lombok.Data;
-import org.eclipse.jetty.websocket.jsr356.encoders.BooleanEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,9 +31,5 @@ public class Goal implements Serializable {
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    public String getName() {
-        return this.name.trim();
-    }
 
 }

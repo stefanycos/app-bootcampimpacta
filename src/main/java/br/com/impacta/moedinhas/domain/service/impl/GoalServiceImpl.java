@@ -8,13 +8,12 @@ import br.com.impacta.moedinhas.domain.service.adapter.ObjectBeanAdapter;
 import br.com.impacta.moedinhas.infrastructure.repository.GoalRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static java.lang.String.format;
 
@@ -41,7 +40,10 @@ public class GoalServiceImpl implements GoalService {
 
         goal.setReached(false);
         goal.setCreatedAt(LocalDateTime.now());
-        return goalRepository.save(goal);
+        Goal savedGoal = goalRepository.save(goal);
+
+        log.info("Goal with id {} successfully saved", savedGoal.getId());
+        return savedGoal;
     }
 
     @Override
@@ -50,15 +52,13 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<Goal> findAll() {
-        Iterable<Goal> categories = goalRepository.findAll();
-        return StreamSupport.stream(categories.spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<Goal> findAll(Pageable pageable) {
+        return goalRepository.findAll(pageable);
     }
 
     @Override
-    public List<Goal> findAllNotReached() {
-        return goalRepository.findByReachedFalse();
+    public Page<Goal> findAllNotReached(Pageable pageable) {
+        return goalRepository.findByReachedFalse(pageable);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class GoalServiceImpl implements GoalService {
         ObjectBeanAdapter.copyNonNullProperties(source, target);
         target.setUpdatedAt(LocalDateTime.now());
 
+        goalRepository.save(target);
         return target;
     }
 }
