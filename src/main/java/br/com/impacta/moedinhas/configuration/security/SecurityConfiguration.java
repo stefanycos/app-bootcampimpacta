@@ -89,8 +89,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .and().cors().and().csrf().disable()
+        http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
@@ -102,6 +101,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     }
 
 
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(allowedOrigins);
