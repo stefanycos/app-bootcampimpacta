@@ -49,6 +49,8 @@ public class User implements Serializable, UserDetails {
     @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     private List<Goal> goals;
 
+    private String resetToken;
+
     @Transient
     private String parentEmail;
 

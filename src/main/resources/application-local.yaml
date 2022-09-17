@@ -22,3 +22,7 @@ app:
   jwt:
     expiration: 86400000 # In Milliseconds
     secret: "this is a secret"
+  email:
+    from: "stefany.souza@aluno.faculdadeimpacta.com.br"
+    subject: "Password Reset Request"
+    redirect-url: "https://moedinhas.herokuapp.com"
