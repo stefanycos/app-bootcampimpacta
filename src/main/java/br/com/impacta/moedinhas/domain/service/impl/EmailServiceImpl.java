@@ -1,9 +1,10 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
 import br.com.impacta.moedinhas.configuration.properties.EmailProperties;
+import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
 import br.com.impacta.moedinhas.domain.model.User;
 import br.com.impacta.moedinhas.domain.service.EmailService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -11,7 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class EmailServiceImpl implements EmailService {
 
@@ -30,6 +31,7 @@ public class EmailServiceImpl implements EmailService {
 
         } catch (final MailException exception) {
             log.error("An error occurred on trying to send email to {}. Error {}", user.getEmail(), exception.getMessage());
+            throw new InternalErrorException("Error on trying to send email");
         }
     }
 

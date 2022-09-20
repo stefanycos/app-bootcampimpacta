@@ -93,6 +93,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/api/v1/password/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
