@@ -29,7 +29,6 @@ public class GoalAdapter {
         goal.setName(request.getName().trim());
         goal.setCost(request.getCost());
         goal.setDescription(request.getDescription());
-        goal.setUser(User.builder().id(UUID.fromString(request.getUserId())).build());
 
         return goal;
     }
@@ -41,8 +40,7 @@ public class GoalAdapter {
         goal.setCost(request.getCost());
         goal.setDescription(request.getDescription());
         goal.setReached(request.getReached());
-        goal.setUser(User.builder().id(UUID.fromString(request.getUserId())).build());
-
+        
         return goal;
     }
 

@@ -11,4 +11,6 @@ public interface AuthenticationService {
 
     Optional<User> findByEmail(String email);
 
+    User getLoggedUser();
+
 }
