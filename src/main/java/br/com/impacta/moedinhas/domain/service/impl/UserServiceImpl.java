@@ -2,7 +2,6 @@ package br.com.impacta.moedinhas.domain.service.impl;
 
 import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
-import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.Role;
 import br.com.impacta.moedinhas.domain.model.User;

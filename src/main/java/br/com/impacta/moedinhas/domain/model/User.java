@@ -42,12 +42,14 @@ public class User implements Serializable, UserDetails {
 
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", nullable = true)
     private User parent;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Goal> goals;
+
+    private String resetToken;
 
     @Transient
     private String parentEmail;

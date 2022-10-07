@@ -1,8 +1,12 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
+import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.Goal;
+import br.com.impacta.moedinhas.domain.model.Role;
+import br.com.impacta.moedinhas.domain.model.User;
+import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import br.com.impacta.moedinhas.domain.service.GoalService;
 import br.com.impacta.moedinhas.domain.service.adapter.ObjectBeanAdapter;
 import br.com.impacta.moedinhas.infrastructure.repository.GoalRepository;
@@ -24,6 +28,8 @@ public class GoalServiceImpl implements GoalService {
 
     private final GoalRepository goalRepository;
 
+    private final AuthenticationService authenticationService;
+
     @Override
     public Goal findById(UUID id) {
         log.info("Searching category with id {}", id);
@@ -40,6 +46,8 @@ public class GoalServiceImpl implements GoalService {
 
         goal.setReached(false);
         goal.setCreatedAt(LocalDateTime.now());
+        goal.setUser(authenticationService.getLoggedUser());
+
         Goal savedGoal = goalRepository.save(goal);
 
         log.info("Goal with id {} successfully saved", savedGoal.getId());
@@ -58,7 +66,9 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public Page<Goal> findAllNotReached(Pageable pageable) {
-        return goalRepository.findByReachedFalse(pageable);
+        User user = authenticationService.getLoggedUser();
+        return goalRepository.findByReachedFalseAndUserAndUserId(pageable, false,
+                user.getRole().equals(Role.CHILDREN) ? user.getId() : this.getUserParent(user));
     }
 
     @Override
@@ -66,8 +76,16 @@ public class GoalServiceImpl implements GoalService {
         Goal target = this.findById(id);
         ObjectBeanAdapter.copyNonNullProperties(source, target);
         target.setUpdatedAt(LocalDateTime.now());
+        target.setUser(authenticationService.getLoggedUser());
 
         goalRepository.save(target);
         return target;
+    }
+
+    private UUID getUserParent(User user) {
+        if (user.getParent() != null) return user.getId();
+
+        log.error("This parent has no linked children yet.");
+        throw new BadRequestException("This parent has no linked children yet.");
     }
 }

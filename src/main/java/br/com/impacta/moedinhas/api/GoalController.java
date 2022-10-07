@@ -52,14 +52,14 @@ public class GoalController {
 
     @GetMapping
     public ResponseEntity<PageableResponse> list(@RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "5") int size) {
+                                                 @RequestParam(defaultValue = "100") int size) {
         PageableResponse goalResponse = goalApplication.list(page, size);
         return ResponseEntity.status(HttpStatus.OK).body(goalResponse);
     }
 
     @GetMapping("/not_reached")
     public ResponseEntity<PageableResponse> listNotReached(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "5") int size) {
+                                                           @RequestParam(defaultValue = "100") int size) {
         PageableResponse goalResponse = goalApplication.listNotReached(page, size);
         return ResponseEntity.status(HttpStatus.OK).body(goalResponse);
     }

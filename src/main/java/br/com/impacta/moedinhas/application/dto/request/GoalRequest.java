@@ -27,9 +27,4 @@ public class GoalRequest {
     @Null(groups = Views.OnCreate.class)
     private Boolean reached;
 
-    @NotNull
-    @NotEmpty
-    @JsonProperty("user_id")
-    private String userId;
-
 }
