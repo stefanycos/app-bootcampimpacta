@@ -1,5 +1,6 @@
 package br.com.impacta.moedinhas.domain.model;
 
+import br.com.impacta.moedinhas.domain.model.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,15 +9,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@Getter
+@Getter()
 @Setter
 @Entity
 @Table(name = "users")
@@ -49,6 +47,10 @@ public class User implements Serializable, UserDetails {
     @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Goal> goals;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
     private String resetToken;
 
     @Transient
@@ -65,6 +67,14 @@ public class User implements Serializable, UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new HashSet<>();
+    }
+
+    public Account getAccount() {
+        if (this.getRole().equals(Role.RESPONSIBLE)) {
+            return parent.getAccount();
+        }
+
+        return this.account;
     }
 
     @Override

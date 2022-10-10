@@ -10,7 +10,7 @@ public class TokenAdapter {
 
     public static AuthenticationResponse toResponse(final Token token) {
         return AuthenticationResponse.builder()
-                .id(token.getUserId())
+                .id(token.getId())
                 .token(token.getToken())
                 .role(token.getRole())
                 .build();

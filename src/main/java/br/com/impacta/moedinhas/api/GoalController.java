@@ -52,15 +52,22 @@ public class GoalController {
 
     @GetMapping
     public ResponseEntity<PageableResponse> list(@RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "100") int size) {
-        PageableResponse goalResponse = goalApplication.list(page, size);
+                                                 @RequestParam(defaultValue = "100") int size,
+                                                 @RequestParam boolean reached) {
+        PageableResponse goalResponse = goalApplication.list(page, size, reached);
         return ResponseEntity.status(HttpStatus.OK).body(goalResponse);
     }
 
-    @GetMapping("/not_reached")
-    public ResponseEntity<PageableResponse> listNotReached(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "100") int size) {
-        PageableResponse goalResponse = goalApplication.listNotReached(page, size);
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Updated", response = GoalResponse.class),
+            @ApiResponse(code = 400, message = "Bad Request", response = ErrorMessageResponse.class),
+            @ApiResponse(code = 401, message = "Unauthorized", response = ErrorMessageResponse.class),
+            @ApiResponse(code = 403, message = "Forbidden", response = ErrorMessageResponse.class),
+            @ApiResponse(code = 404, message = "Not Found", response = ErrorMessageResponse.class)
+    })
+    @PatchMapping("/{goalId}/approve")
+    public ResponseEntity<GoalResponse> approve(@PathVariable UUID goalId) {
+        GoalResponse goalResponse = goalApplication.approve(goalId);
         return ResponseEntity.status(HttpStatus.OK).body(goalResponse);
     }
 

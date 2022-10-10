@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.application.dto.request;
 
-import br.com.impacta.moedinhas.domain.model.Role;
+import br.com.impacta.moedinhas.domain.model.enums.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -37,6 +38,7 @@ public class UserRequest {
     @JsonProperty("user_type")
     private Role role;
 
+    @JsonFormat(pattern="dd/MM/yyyy")
     @ApiModelProperty(notes = "Date format dd/MM/yyyy")
     @NotNull
     @NotEmpty

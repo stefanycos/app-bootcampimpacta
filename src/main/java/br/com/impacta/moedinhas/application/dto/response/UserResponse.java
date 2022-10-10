@@ -1,6 +1,6 @@
 package br.com.impacta.moedinhas.application.dto.response;
 
-import br.com.impacta.moedinhas.domain.model.Role;
+import br.com.impacta.moedinhas.domain.model.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;

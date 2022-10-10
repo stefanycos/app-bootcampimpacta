@@ -4,7 +4,7 @@ import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
 import br.com.impacta.moedinhas.domain.model.Account;
-import br.com.impacta.moedinhas.domain.model.Role;
+import br.com.impacta.moedinhas.domain.model.enums.Role;
 import br.com.impacta.moedinhas.domain.model.User;
 import br.com.impacta.moedinhas.domain.service.AccountService;
 import br.com.impacta.moedinhas.domain.service.UserService;
@@ -51,7 +51,14 @@ public class UserServiceImpl implements UserService {
         user.setCreatedAt(LocalDateTime.now());
         userRepository.save(user);
 
-        accountService.create(new Account(user, 0d));
+        final Account account = new Account(user, 0d);
+        accountService.create(account);
+
+        if (account.canCreateAccount()) { // TODO remove this if solving cascade problem
+            user.setAccount(account);
+            userRepository.save(user);
+        }
+
         return user;
     }
 

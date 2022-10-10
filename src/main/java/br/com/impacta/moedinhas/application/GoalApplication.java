@@ -12,10 +12,10 @@ public interface GoalApplication {
 
     GoalResponse findById(UUID id);
 
-    PageableResponse list(int page, int size);
-
-    PageableResponse listNotReached(int page, int size);
+    PageableResponse list(int page, int size, boolean reached);
 
     GoalResponse update(UUID id, GoalRequest request);
+
+    GoalResponse approve(UUID id);
 
 }

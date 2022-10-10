@@ -1,4 +1,4 @@
-package br.com.impacta.moedinhas.domain.model;
+package br.com.impacta.moedinhas.domain.model.enums;
 
 import io.swagger.annotations.ApiModel;
 
