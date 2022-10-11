@@ -3,7 +3,7 @@ package br.com.impacta.moedinhas.configuration.security;
 import br.com.impacta.moedinhas.api.handler.CustomAccessDeniedExceptionHandler;
 import br.com.impacta.moedinhas.api.handler.CustomAuthenticationExceptionHandler;
 import br.com.impacta.moedinhas.configuration.security.impl.JwtTokenFilter;
-import br.com.impacta.moedinhas.domain.TokenService;
+import br.com.impacta.moedinhas.domain.service.TokenService;
 import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

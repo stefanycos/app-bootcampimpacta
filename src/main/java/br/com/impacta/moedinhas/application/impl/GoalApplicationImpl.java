@@ -37,18 +37,9 @@ public class GoalApplicationImpl implements GoalApplication {
     }
 
     @Override
-    public PageableResponse list(int page, int size) {
+    public PageableResponse list(int page, int size, boolean reached) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Goal> pageableGoals = goalService.findAll(pageable);
-
-        List<GoalResponse> goalResponse = GoalAdapter.toResponseList(pageableGoals.getContent());
-        return PageableAdapter.toPageable(goalResponse, pageableGoals);
-    }
-
-    @Override
-    public PageableResponse<PageableResponse> listNotReached(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Goal> pageableGoals = goalService.findAllNotReached(pageable);
+        Page<Goal> pageableGoals = goalService.findByReachedAndUserId(pageable, reached);
 
         List<GoalResponse> goalResponse = GoalAdapter.toResponseList(pageableGoals.getContent());
         return PageableAdapter.toPageable(goalResponse, pageableGoals);
@@ -59,6 +50,12 @@ public class GoalApplicationImpl implements GoalApplication {
         Goal goal = GoalAdapter.toEntity(id, request);
         Goal updatedGoal = goalService.update(id, goal);
         return GoalAdapter.toResponse(updatedGoal);
+    }
+
+    @Override
+    public GoalResponse approve(UUID id) {
+        Goal goal = goalService.approve(id);
+        return GoalAdapter.toResponse(goal);
     }
 
 }

@@ -3,7 +3,6 @@ package br.com.impacta.moedinhas.application.adapter;
 import br.com.impacta.moedinhas.application.dto.request.GoalRequest;
 import br.com.impacta.moedinhas.application.dto.response.GoalResponse;
 import br.com.impacta.moedinhas.domain.model.Goal;
-import br.com.impacta.moedinhas.domain.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -39,8 +38,7 @@ public class GoalAdapter {
         goal.setName(request.getName() != null ? request.getName().trim() : null);
         goal.setCost(request.getCost());
         goal.setDescription(request.getDescription());
-        goal.setReached(request.getReached());
-        
+
         return goal;
     }
 

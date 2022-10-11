@@ -1,6 +1,6 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
-import br.com.impacta.moedinhas.domain.TokenService;
+import br.com.impacta.moedinhas.domain.service.TokenService;
 import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
 import br.com.impacta.moedinhas.domain.model.Token;
 import br.com.impacta.moedinhas.domain.model.User;
@@ -43,7 +43,11 @@ public class TokenServiceImpl implements TokenService {
                     .signWith(SignatureAlgorithm.HS256, secret)
                     .compact();
 
-            return Token.builder().token(token).role(loggedUser.getRole()).userId(loggedUser.getId()).build();
+            return Token.builder()
+                    .token(token)
+                    .role(loggedUser.getRole())
+                    .id(loggedUser.getId())
+                    .build();
         } catch (final Exception exception) {
             log.error("Error on trying to create token. Message: {}", exception.getMessage());
             throw new InternalErrorException(exception.getMessage());

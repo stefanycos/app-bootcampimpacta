@@ -3,7 +3,7 @@ package br.com.impacta.moedinhas.application.impl;
 import br.com.impacta.moedinhas.application.TokenApplication;
 import br.com.impacta.moedinhas.application.adapter.TokenAdapter;
 import br.com.impacta.moedinhas.application.dto.response.AuthenticationResponse;
-import br.com.impacta.moedinhas.domain.TokenService;
+import br.com.impacta.moedinhas.domain.service.TokenService;
 import br.com.impacta.moedinhas.domain.model.Token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

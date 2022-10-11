@@ -14,10 +14,10 @@ public interface GoalService {
 
     boolean exists(Goal goal);
 
-    Page<Goal> findAll(Pageable pageable);
-
-    Page<Goal> findAllNotReached(Pageable pageable);
+    Page<Goal> findByReachedAndUserId(Pageable pageable, Boolean reached);
 
     Goal update(UUID id, Goal goal);
+
+    Goal approve(UUID id);
 
 }

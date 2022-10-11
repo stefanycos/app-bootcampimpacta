@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.api.handler;
 
 import br.com.impacta.moedinhas.application.dto.response.ErrorMessageResponse;
+import br.com.impacta.moedinhas.application.exceptions.ApplicationAuthenticationException;
 import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.InternalErrorException;
@@ -29,6 +30,11 @@ public class ControllerExceptionHandler {
     private static final String MESSAGE_ERROR_INTERNAL = "Erro interno!";
     private static final String DESCRIPTION_ERROR_INTERNAL = "Ocorreu um erro inesperado entre em contato como Administrador do sistema";
 
+    @ExceptionHandler(ApplicationAuthenticationException.class)
+    public ResponseEntity<ErrorMessageResponse> categoryNotFoundException(ApplicationAuthenticationException exception) {
+        return ResponseEntity.status(exception.getHttpStatus())
+                .body(ErrorMessageResponse.build(exception.getMessage(), exception.getReasonPhrase()));
+    }
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorMessageResponse> categoryNotFoundException(NotFoundException exception) {
         return ResponseEntity.status(exception.getHttpStatus())

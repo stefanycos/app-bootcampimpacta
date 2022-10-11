@@ -3,9 +3,11 @@ package br.com.impacta.moedinhas.domain.service.impl;
 import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
+import br.com.impacta.moedinhas.domain.model.Account;
 import br.com.impacta.moedinhas.domain.model.Goal;
-import br.com.impacta.moedinhas.domain.model.Role;
 import br.com.impacta.moedinhas.domain.model.User;
+import br.com.impacta.moedinhas.domain.model.enums.Role;
+import br.com.impacta.moedinhas.domain.service.AccountService;
 import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import br.com.impacta.moedinhas.domain.service.GoalService;
 import br.com.impacta.moedinhas.domain.service.adapter.ObjectBeanAdapter;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,6 +32,8 @@ public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
 
     private final AuthenticationService authenticationService;
+
+    private final AccountService accountService;
 
     @Override
     public Goal findById(UUID id) {
@@ -60,15 +65,10 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public Page<Goal> findAll(Pageable pageable) {
-        return goalRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Goal> findAllNotReached(Pageable pageable) {
+    public Page<Goal> findByReachedAndUserId(Pageable pageable, Boolean reached) {
         User user = authenticationService.getLoggedUser();
-        return goalRepository.findByReachedFalseAndUserAndUserId(pageable, false,
-                user.getRole().equals(Role.CHILDREN) ? user.getId() : this.getUserParent(user));
+        return goalRepository.findByReachedAndUserId(pageable, reached,
+                user.getRole().equals(Role.CHILDREN) ? user.getId() : this.getUserParent(user).getId());
     }
 
     @Override
@@ -82,10 +82,24 @@ public class GoalServiceImpl implements GoalService {
         return target;
     }
 
-    private UUID getUserParent(User user) {
-        if (user.getParent() != null) return user.getId();
+    @Transactional
+    @Override
+    public Goal approve(UUID id) {
+        Goal goal = this.findById(id);
 
-        log.error("This parent has no linked children yet.");
-        throw new BadRequestException("This parent has no linked children yet.");
+        if (goal.getReached())
+            throw new BadRequestException("Goal has already been approved");
+
+        Account account = goal.getUser().getAccount().orElseThrow(() -> new NotFoundException("Account for user not found"));
+        accountService.withdraw(goal.getCost(), account.getId(), goal);
+
+        goal.setReached(true);
+        goalRepository.save(goal);
+
+        return goal;
+    }
+
+    private User getUserParent(User user) {
+        return user.getParent().orElseThrow(() -> new BadRequestException("This parent has no linked children yet."));
     }
 }

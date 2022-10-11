@@ -1,4 +1,4 @@
-package br.com.impacta.moedinhas.domain;
+package br.com.impacta.moedinhas.domain.service;
 
 import br.com.impacta.moedinhas.domain.model.Token;
 import org.springframework.security.core.Authentication;
