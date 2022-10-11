@@ -7,12 +7,13 @@ import br.com.impacta.moedinhas.domain.model.enums.Role;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @NoArgsConstructor
 @Entity
 @Table(name = "accounts")
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @GeneratedValue
@@ -57,8 +58,11 @@ public class Account {
         return this.getUser().getRole().equals(Role.CHILDREN);
     }
 
-    public boolean canMakeTransactions() {
-        return this.getUser().getRole().equals(Role.RESPONSIBLE);
+    public boolean canMakeTransactions() { // TODO Fix logic, only RESPONSIBLE can make deposits
+        if (!this.getUser().getParent().isPresent())
+            return false;
+
+        return this.getUser().getRole().equals(Role.CHILDREN) && this.getUser().getParent().get().getRole().equals(Role.RESPONSIBLE);
     }
 
     public UUID getId() {

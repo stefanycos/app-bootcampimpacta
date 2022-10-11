@@ -69,12 +69,16 @@ public class User implements Serializable, UserDetails {
         return new HashSet<>();
     }
 
-    public Account getAccount() {
+    public Optional<Account> getAccount() {
         if (this.getRole().equals(Role.RESPONSIBLE)) {
-            return parent.getAccount();
+            return this.getParent().isPresent() ? this.parent.getAccount() : Optional.empty();
         }
 
-        return this.account;
+        return Optional.ofNullable(this.account);
+    }
+
+    public Optional<User> getParent() {
+        return Optional.ofNullable(this.parent);
     }
 
     @Override

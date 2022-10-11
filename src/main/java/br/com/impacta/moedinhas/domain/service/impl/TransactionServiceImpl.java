@@ -18,7 +18,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
 
-
     @Override
     public Page<Transaction> findTransactionsByAccount(Pageable pageable, UUID accountId) {
         return transactionRepository.findTransactionsByAccount(pageable, accountId);
