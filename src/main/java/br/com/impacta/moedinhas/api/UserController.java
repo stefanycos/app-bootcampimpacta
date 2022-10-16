@@ -4,6 +4,7 @@ import br.com.impacta.moedinhas.application.UserApplication;
 import br.com.impacta.moedinhas.application.dto.request.DefineParentRequest;
 import br.com.impacta.moedinhas.application.dto.request.UserRequest;
 import br.com.impacta.moedinhas.application.dto.request.Views;
+import br.com.impacta.moedinhas.application.dto.response.LoggedUserResponse;
 import br.com.impacta.moedinhas.application.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,6 +51,12 @@ public class UserController {
     public ResponseEntity<Object> setDependent(@PathVariable UUID userId, @Validated(Views.OnUpdateResponsible.class) @Valid @RequestBody DefineParentRequest request) {
         userApplication.defineDependent(request.getDependentEmail(), userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/dependent")
+    public ResponseEntity<LoggedUserResponse> getUserParent(@PathVariable UUID userId) {
+        LoggedUserResponse loggedUserResponse = userApplication.getUserParent(userId);
+        return ResponseEntity.ok(loggedUserResponse);
     }
 
 }

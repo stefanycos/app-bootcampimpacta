@@ -17,7 +17,7 @@ public class AuthenticationAdapter {
         return loggedUser;
     }
 
-    private static LoggedUserResponse toLoggedUserResponse(User user) {
+    public static LoggedUserResponse toLoggedUserResponse(User user) {
         return LoggedUserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
