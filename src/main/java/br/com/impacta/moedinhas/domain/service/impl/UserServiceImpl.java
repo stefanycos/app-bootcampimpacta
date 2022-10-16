@@ -38,6 +38,19 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User Not Found"));
     }
 
+    @Override
+    public User getUserDependent(UUID id) {
+        User user = this.findById(id);
+
+        if (user.getRole().equals(Role.CHILDREN))
+            throw new BadRequestException(String.format("User id received does not refers to a user from type %s", Role.RESPONSIBLE));
+
+        if (user.getParent().isEmpty())
+            throw new BadRequestException("User id received does not have any parent associated yet");
+
+        return user.getParent().get();
+    }
+
     @Transactional
     @Override
     public User create(User user) {
