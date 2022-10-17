@@ -20,16 +20,19 @@ public class UserRequest {
 
     @NotNull
     @NotEmpty
+    @ApiModelProperty(notes = "nome do usuário", example = "Joao", required = true)
     private String name;
 
     @Null(groups = Views.OnUpdate.class)
     @NotNull
     @NotEmpty
+    @ApiModelProperty(notes = "senha", example = "senha123", required = true) 
     private String password;
 
     @Email
     @NotNull
     @NotEmpty
+    @ApiModelProperty(notes = "email do usuário", example = "joao@email.com", required = true) 
     private String email;
 
     @ApiModelProperty
@@ -39,7 +42,7 @@ public class UserRequest {
     private Role role;
 
     @JsonFormat(pattern="dd/MM/yyyy")
-    @ApiModelProperty(notes = "Date format dd/MM/yyyy")
+    @ApiModelProperty(notes = "data de aniversário do usuário", example = "01/01/2000", required = true) 
     @NotNull
     @NotEmpty
     private String birthday;
