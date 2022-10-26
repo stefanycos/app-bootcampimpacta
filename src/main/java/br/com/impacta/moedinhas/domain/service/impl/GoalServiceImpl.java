@@ -67,8 +67,19 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public Page<Goal> findByReachedAndUserId(Pageable pageable, Boolean reached) {
         User user = authenticationService.getLoggedUser();
-        return goalRepository.findByReachedAndUserId(pageable, reached,
-                user.getRole().equals(Role.CHILDREN) ? user.getId() : this.getUserParent(user).getId());
+
+        if (user.getRole().equals(Role.CHILDREN)) {
+            log.info("User type {} returning it's own goals", Role.CHILDREN);
+            return goalRepository.findByReachedAndUserId(pageable, reached, user.getId());
+        }
+
+        if (user.getRole().equals(Role.RESPONSIBLE) && user.getParent().isPresent()) {
+            log.info("User type {} returning it's child goals", Role.RESPONSIBLE);
+            return goalRepository.findByReachedAndUserId(pageable, reached, user.getParent().get().getId());
+        }
+
+        log.info("No dependent set yet, returning empty goals list");
+        return Page.empty();
     }
 
     @Override
@@ -99,7 +110,4 @@ public class GoalServiceImpl implements GoalService {
         return goal;
     }
 
-    private User getUserParent(User user) {
-        return user.getParent().orElseThrow(() -> new BadRequestException("This parent has no linked children yet."));
-    }
 }
