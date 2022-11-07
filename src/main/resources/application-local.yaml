@@ -15,6 +15,20 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+    #properties:
+     # hibernate:
+      #  show_sql: true
+       # format_sql: true
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: ""
+    password: ""
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
 
 
 # Application configuration
@@ -22,3 +36,7 @@ app:
   jwt:
     expiration: 86400000 # In Milliseconds
     secret: "this is a secret"
+  email:
+    from: "stefany.souza@aluno.faculdadeimpacta.com.br"
+    subject: "Password Reset Request"
+    redirect-url: "https://moedinhas.herokuapp.com"

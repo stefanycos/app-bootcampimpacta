@@ -4,6 +4,7 @@ import br.com.impacta.moedinhas.application.UserApplication;
 import br.com.impacta.moedinhas.application.dto.request.DefineParentRequest;
 import br.com.impacta.moedinhas.application.dto.request.UserRequest;
 import br.com.impacta.moedinhas.application.dto.request.Views;
+import br.com.impacta.moedinhas.application.dto.response.LoggedUserResponse;
 import br.com.impacta.moedinhas.application.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/users")
@@ -42,13 +44,19 @@ public class UserController {
     @PatchMapping("/{userId}/responsible")
     public ResponseEntity<Object> setResponsible(@PathVariable UUID userId, @Validated(Views.OnUpdateDependent.class) @Valid @RequestBody DefineParentRequest request) {
         userApplication.defineResponsible(userId, request.getResponsibleEmail());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{userId}/dependent")
     public ResponseEntity<Object> setDependent(@PathVariable UUID userId, @Validated(Views.OnUpdateResponsible.class) @Valid @RequestBody DefineParentRequest request) {
         userApplication.defineDependent(request.getDependentEmail(), userId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{userId}/dependent")
+    public ResponseEntity<LoggedUserResponse> getUserParent(@PathVariable UUID userId) {
+        LoggedUserResponse loggedUserResponse = userApplication.getUserParent(userId);
+        return ResponseEntity.ok(loggedUserResponse);
     }
 
 }

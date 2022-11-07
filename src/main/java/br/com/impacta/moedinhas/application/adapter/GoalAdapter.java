@@ -3,7 +3,6 @@ package br.com.impacta.moedinhas.application.adapter;
 import br.com.impacta.moedinhas.application.dto.request.GoalRequest;
 import br.com.impacta.moedinhas.application.dto.response.GoalResponse;
 import br.com.impacta.moedinhas.domain.model.Goal;
-import br.com.impacta.moedinhas.domain.model.User;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -26,16 +25,25 @@ public class GoalAdapter {
 
     public static Goal toEntity(final GoalRequest request) {
         Goal goal = new Goal();
-        goal.setName(request.getName());
+        goal.setName(request.getName().trim());
         goal.setCost(request.getCost());
         goal.setDescription(request.getDescription());
-        goal.setUser(User.builder().id(UUID.fromString(request.getUserId())).build());
 
         return goal;
     }
 
-    public static List<GoalResponse> toResponseList(final List<Goal> categories) {
-        return categories.stream()
+    public static Goal toEntity(UUID id, final GoalRequest request) {
+        Goal goal = new Goal();
+        goal.setId(id);
+        goal.setName(request.getName() != null ? request.getName().trim() : null);
+        goal.setCost(request.getCost());
+        goal.setDescription(request.getDescription());
+
+        return goal;
+    }
+
+    public static List<GoalResponse> toResponseList(final List<Goal> goals) {
+        return goals.stream()
                 .map(GoalAdapter::toResponse)
                 .collect(Collectors.toList());
     }

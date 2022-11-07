@@ -1,20 +1,26 @@
 package br.com.impacta.moedinhas.domain.service.impl;
 
+import br.com.impacta.moedinhas.domain.exception.BadRequestException;
 import br.com.impacta.moedinhas.domain.exception.ConflictException;
 import br.com.impacta.moedinhas.domain.exception.NotFoundException;
+import br.com.impacta.moedinhas.domain.model.Account;
 import br.com.impacta.moedinhas.domain.model.Goal;
+import br.com.impacta.moedinhas.domain.model.User;
+import br.com.impacta.moedinhas.domain.model.enums.Role;
+import br.com.impacta.moedinhas.domain.service.AccountService;
+import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import br.com.impacta.moedinhas.domain.service.GoalService;
 import br.com.impacta.moedinhas.domain.service.adapter.ObjectBeanAdapter;
 import br.com.impacta.moedinhas.infrastructure.repository.GoalRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static java.lang.String.format;
 
@@ -24,6 +30,10 @@ import static java.lang.String.format;
 public class GoalServiceImpl implements GoalService {
 
     private final GoalRepository goalRepository;
+
+    private final AuthenticationService authenticationService;
+
+    private final AccountService accountService;
 
     @Override
     public Goal findById(UUID id) {
@@ -41,7 +51,12 @@ public class GoalServiceImpl implements GoalService {
 
         goal.setReached(false);
         goal.setCreatedAt(LocalDateTime.now());
-        return goalRepository.save(goal);
+        goal.setUser(authenticationService.getLoggedUser());
+
+        Goal savedGoal = goalRepository.save(goal);
+
+        log.info("Goal with id {} successfully saved", savedGoal.getId());
+        return savedGoal;
     }
 
     @Override
@@ -50,15 +65,21 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public List<Goal> findAll() {
-        Iterable<Goal> categories = goalRepository.findAll();
-        return StreamSupport.stream(categories.spliterator(), false)
-                .collect(Collectors.toList());
-    }
+    public Page<Goal> findByReachedAndUserId(Pageable pageable, Boolean reached) {
+        User user = authenticationService.getLoggedUser();
 
-    @Override
-    public List<Goal> findAllNotReached() {
-        return goalRepository.findByReachedFalse();
+        if (user.getRole().equals(Role.CHILDREN)) {
+            log.info("User type {} returning it's own goals", Role.CHILDREN);
+            return goalRepository.findByReachedAndUserId(pageable, reached, user.getId());
+        }
+
+        if (user.getRole().equals(Role.RESPONSIBLE) && user.getParent().isPresent()) {
+            log.info("User type {} returning it's child goals", Role.RESPONSIBLE);
+            return goalRepository.findByReachedAndUserId(pageable, reached, user.getParent().get().getId());
+        }
+
+        log.info("No dependent set yet, returning empty goals list");
+        return Page.empty();
     }
 
     @Override
@@ -66,7 +87,27 @@ public class GoalServiceImpl implements GoalService {
         Goal target = this.findById(id);
         ObjectBeanAdapter.copyNonNullProperties(source, target);
         target.setUpdatedAt(LocalDateTime.now());
+        target.setUser(authenticationService.getLoggedUser());
 
+        goalRepository.save(target);
         return target;
     }
+
+    @Transactional
+    @Override
+    public Goal approve(UUID id) {
+        Goal goal = this.findById(id);
+
+        if (goal.getReached())
+            throw new BadRequestException("Goal has already been approved");
+
+        Account account = goal.getUser().getAccount().orElseThrow(() -> new NotFoundException("Account for user not found"));
+        accountService.withdraw(goal.getCost(), account.getId(), goal);
+
+        goal.setReached(true);
+        goalRepository.save(goal);
+
+        return goal;
+    }
+
 }

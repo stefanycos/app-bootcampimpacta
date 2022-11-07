@@ -3,7 +3,7 @@ package br.com.impacta.moedinhas.configuration.security;
 import br.com.impacta.moedinhas.api.handler.CustomAccessDeniedExceptionHandler;
 import br.com.impacta.moedinhas.api.handler.CustomAuthenticationExceptionHandler;
 import br.com.impacta.moedinhas.configuration.security.impl.JwtTokenFilter;
-import br.com.impacta.moedinhas.domain.TokenService;
+import br.com.impacta.moedinhas.domain.service.TokenService;
 import br.com.impacta.moedinhas.domain.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -89,11 +89,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .and().cors().and().csrf().disable()
+        http.cors().and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/auth").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/api/v1/password/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler())
@@ -102,6 +102,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter { //NOSO
     }
 
 
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(allowedOrigins);

@@ -1,5 +1,6 @@
 package br.com.impacta.moedinhas.domain.model;
 
+import br.com.impacta.moedinhas.domain.model.enums.Role;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,15 +9,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-@Getter
+@Getter()
 @Setter
 @Entity
 @Table(name = "users")
@@ -42,12 +40,18 @@ public class User implements Serializable, UserDetails {
 
     private Role role;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id", nullable = true)
     private User parent;
 
-    @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "id", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Goal> goals;
+
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
+    private Account account;
+
+    private String resetToken;
 
     @Transient
     private String parentEmail;
@@ -63,6 +67,18 @@ public class User implements Serializable, UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new HashSet<>();
+    }
+
+    public Optional<Account> getAccount() {
+        if (this.getRole().equals(Role.RESPONSIBLE)) {
+            return this.getParent().isPresent() ? this.parent.getAccount() : Optional.empty();
+        }
+
+        return Optional.ofNullable(this.account);
+    }
+
+    public Optional<User> getParent() {
+        return Optional.ofNullable(this.parent);
     }
 
     @Override

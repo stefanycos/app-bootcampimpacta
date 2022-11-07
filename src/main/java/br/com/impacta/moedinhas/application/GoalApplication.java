@@ -2,8 +2,8 @@ package br.com.impacta.moedinhas.application;
 
 import br.com.impacta.moedinhas.application.dto.request.GoalRequest;
 import br.com.impacta.moedinhas.application.dto.response.GoalResponse;
+import br.com.impacta.moedinhas.application.dto.response.PageableResponse;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface GoalApplication {
@@ -12,10 +12,10 @@ public interface GoalApplication {
 
     GoalResponse findById(UUID id);
 
-    List<GoalResponse> list();
-
-    List<GoalResponse> listNotReached();
+    PageableResponse list(int page, int size, boolean reached);
 
     GoalResponse update(UUID id, GoalRequest request);
+
+    GoalResponse approve(UUID id);
 
 }
