@@ -1,6 +1,7 @@
 package br.com.impacta.moedinhas.domain.service;
 
 import br.com.impacta.moedinhas.domain.model.Goal;
+import br.com.impacta.moedinhas.domain.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,7 @@ public interface GoalService {
 
     Goal save(Goal goal);
 
-    boolean exists(Goal goal);
+    boolean exists(Goal goal, User user);
 
     Page<Goal> findByReachedAndUserId(Pageable pageable, Boolean reached);
 

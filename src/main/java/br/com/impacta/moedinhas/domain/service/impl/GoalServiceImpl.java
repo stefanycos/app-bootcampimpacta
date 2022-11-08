@@ -45,13 +45,14 @@ public class GoalServiceImpl implements GoalService {
     public Goal save(Goal goal) {
         log.info("Saving goal {} in database", goal.getName());
 
-        if (this.exists(goal)) {
+        User loggedUser = authenticationService.getLoggedUser();
+        if (this.exists(goal, loggedUser)) {
             throw new ConflictException(format("Goal named %s already exists", goal.getName()));
         }
 
         goal.setReached(false);
         goal.setCreatedAt(LocalDateTime.now());
-        goal.setUser(authenticationService.getLoggedUser());
+        goal.setUser(loggedUser);
 
         Goal savedGoal = goalRepository.save(goal);
 
@@ -60,8 +61,8 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
-    public boolean exists(Goal goal) {
-        return goalRepository.findByNameIgnoreCase(goal.getName()).isPresent();
+    public boolean exists(Goal goal, User user) {
+        return goalRepository.findByNameIgnoreCaseAndUser(goal.getName(), user).isPresent();
     }
 
     @Override
