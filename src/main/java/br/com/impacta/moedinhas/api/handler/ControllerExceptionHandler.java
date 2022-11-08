@@ -31,7 +31,7 @@ public class ControllerExceptionHandler {
     private static final String DESCRIPTION_ERROR_INTERNAL = "Ocorreu um erro inesperado entre em contato como Administrador do sistema";
 
     @ExceptionHandler(ApplicationAuthenticationException.class)
-    public ResponseEntity<ErrorMessageResponse> categoryNotFoundException(ApplicationAuthenticationException exception) {
+    public ResponseEntity<ErrorMessageResponse> authenticationFailedException(ApplicationAuthenticationException exception) {
         return ResponseEntity.status(exception.getHttpStatus())
                 .body(ErrorMessageResponse.build(exception.getMessage(), exception.getReasonPhrase()));
     }

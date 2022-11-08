@@ -36,7 +36,7 @@ public class AuthenticationApplicationImpl implements AuthenticationApplication 
             return tokenApplication.createToken(authentication);
         } catch (final AuthenticationException e) {
             log.error("Error on trying to authenticate user. Error {}", e.getMessage());
-            throw new ApplicationAuthenticationException("Error on trying to authenticate user.");
+            throw new ApplicationAuthenticationException("Email and/or password incorrect");
         }
     }
 
