@@ -32,7 +32,7 @@ public class Account implements Serializable {
 
     public void debit(final Double valueOfDebit) {
         if (this.getBalance() < valueOfDebit) {
-            throw new AccountWithoutBalanceException("Balance not enough for transaction");
+            throw new AccountWithoutBalanceException("Balance not enough for this transaction");
         }
 
         if (!this.canMakeTransactions()) {
@@ -44,7 +44,7 @@ public class Account implements Serializable {
 
     public void deposit(final Double valueOfDeposit) {
         if (valueOfDeposit <= 0) {
-            throw new InvalidBalanceAmountException("Amount receive is not valid");
+            throw new InvalidBalanceAmountException("Amount receive must be bigger than zero");
         }
 
         if (!this.canMakeTransactions()) {

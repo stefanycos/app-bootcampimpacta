@@ -106,9 +106,11 @@ public class UserServiceImpl implements UserService {
         if (!responsible.getRole().equals(Role.RESPONSIBLE))
             throw new BadRequestException(format("Parent with email %s must be type %s", responsibleEmail, Role.RESPONSIBLE));
 
-        this.saveParent(responsible, dependent);
+        dependent.setParent(responsible);
+        responsible.setParent(dependent);
+        userRepository.save(dependent);
 
-        log.info("Responsible defined successfully.");
+        log.info("Responsible and dependent defined successfully.");
     }
 
     @Override
@@ -121,15 +123,11 @@ public class UserServiceImpl implements UserService {
         if (!dependent.getRole().equals(Role.CHILDREN))
             throw new BadRequestException(format("Parent with email %s must be type %s", dependentEmail, Role.CHILDREN));
 
-        this.saveParent(dependent, responsible);
-
-        log.info("Dependent defined successfully.");
-    }
-
-    private void saveParent(User dependent, User responsible) {
         responsible.setParent(dependent);
-        responsible.setUpdatedAt(LocalDateTime.now());
+        dependent.setParent(responsible);
         userRepository.save(responsible);
+
+        log.info("Dependent and responsible defined successfully.");
     }
 
     private User getParent(String email) {
